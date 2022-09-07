@@ -1,0 +1,16 @@
+[package]
+name = "x64dbg_ext"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type=["dylib"]
+
+[dependencies]
+# due to unmerged PR of updates to bindings https://github.com/luyikk/dbg64_plugins/pull/1
+# please use my fork for now https://github.com/expend20/dbg64_plugins/tree/update-01-09-2022
+x64dbg_sdk_sys = { path = "../dbg64_plugins_fork" }
+iced-x86 = "1.17.0"
+unicorn-engine = "2.0.0"
+lazy_static = "1"
+
