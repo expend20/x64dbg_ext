@@ -23,16 +23,18 @@ Here is how `context` looks like:
 
 # Build
 
-Set `LIBCLANG_PATH` for bindgen to work
+You need at least rust 1.64.0 (at the time of writing beta: `rustup install beta`)
+
+Set `LIBCLANG_PATH` for bindgen to work.
 
 ```
 set LIBCLANG_PATH=C:\Program Files\LLVM\bin
-cargo build --release
+rustup run beta cargo build --release
 ```
 
 ## Development build
 
-Build [PluginDebHelper](https://github.com/x64dbg/PluginDevHelper), then:
+Build [PluginDevHelper](https://github.com/x64dbg/PluginDevHelper), then:
 
 ```
 mklink target\release\x64dbg_ext.dll <x64dbg plugins>\ext.dp64
