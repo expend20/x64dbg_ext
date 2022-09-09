@@ -17,35 +17,21 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Cache LLVM and Clang
-      id: cache-llvm
-      uses: actions/cache@v2
-      with:
-        path: |
-          C:/Program Files/LLVM
-          ./llvm
-        key: llvm-14.0.6
-
-    - name: Install LLVM and Clang
-      uses: KyleMayes/install-llvm-action@c538b5e281d5fc40848a3a62636a3a2b6f5a1cfa
-      with:
-        version: "14.0.6"
-        cached: ${{ steps.cache-llvm.outputs.cache-hit }}
-
     - name: Rust toolchain
       run: |
         rustup set auto-self-update disable
         rustup toolchain install beta --profile minimal
         rustup default beta
-        set LIBCLANG_PATH=C:\Program Files\LLVM\bin
 
     - uses: Swatinem/rust-cache@6720f05bc48b77f96918929a9019fb2203ff71f8
 
     - name: Build
       run: |
+        set LIBCLANG_PATH=C:\Program Files\LLVM\bin
         cargo build --release --all-features
         mkdir bin\x64\plugins
         copy target\release\x64dbg_ext.dll bin\x64\plugins\ext.dp64
+      shell: cmd
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
