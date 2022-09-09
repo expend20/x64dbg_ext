@@ -1,0 +1,69 @@
+name: Rust
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    # Skip building pull requests from the same repository
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019]
+    env:
+      BUILD_TYPE: Release
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Cache LLVM and Clang
+      id: cache-llvm
+      uses: actions/cache@v2
+      with:
+        path: |
+          C:/Program Files/LLVM
+          ./llvm
+        key: llvm-14.0.6
+
+    - name: Install LLVM and Clang
+      uses: KyleMayes/install-llvm-action@c538b5e281d5fc40848a3a62636a3a2b6f5a1cfa
+      with:
+        version: "14.0.6"
+        cached: ${{ steps.cache-llvm.outputs.cache-hit }}
+
+    - name: Rust toolchain
+      run: |
+        rustup set auto-self-update disable
+        rustup toolchain install beta --profile minimal
+        rustup default beta
+        set LIBCLANG_PATH=C:\Program Files\LLVM\bin
+
+    - uses: Swatinem/rust-cache@6720f05bc48b77f96918929a9019fb2203ff71f8
+
+    - name: Build
+      run: |
+        cargo build --release --all-features
+        mkdir bin\x64\plugins
+        copy target\release\x64dbg_ext.dll bin\x64\plugins\ext.dp64
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ github.event.repository.name }}-${{ matrix.os }}
+        path: bin/*
+
+    - name: Compress artifacts
+      uses: vimtor/action-zip@d78955ce8ce0b145b9f777076e53e1869efcadf6
+      with:
+        files: bin/
+        dest: ${{ github.event.repository.name }}-${{ github.sha }}.zip
+
+    - name: Release
+      uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
+      if: ${{ startsWith(github.ref, 'refs/tags/') }}
+      with:
+        prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') || contains(github.ref, '-pre') }}
+        files: ${{ github.event.repository.name }}-${{ github.sha }}.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -7,10 +7,8 @@ edition = "2021"
 crate-type=["dylib"]
 
 [dependencies]
-# due to unmerged PR of updates to bindings https://github.com/luyikk/dbg64_plugins/pull/1
-# please use my fork for now https://github.com/expend20/dbg64_plugins/tree/update-01-09-2022
-x64dbg_sdk_sys = { path = "../dbg64_plugins_fork" }
+# waiting for: https://github.com/luyikk/dbg64_plugins/pull/1
+x64dbg_sdk_sys = { git = "https://github.com/expend20/dbg64_plugins", branch = "update-01-09-2022" }
 iced-x86 = "1.17.0"
 unicorn-engine = "2.0.0"
 lazy_static = "1"
-
