@@ -1,9 +1,9 @@
 This is the library that extends x64dbg with new features:
 
-* Telescope
-* Unicorn emulator to predict code flow
+* Telescope. It's basically recursive dereferencerer of memory view which looks at the pointers in memory region recursively and extracting information from that memory: symbol, module with section name or string.
+* Unicorn emulator to replace the disassembly window. Instead of linear disassembly now you see wich assembly lines is actually going to be executed with propogated values in the registers. This allows you to save time on single stepping or double clicking on jumps in disassembly view.
 
-Both features actually inspired by projects like [GEF](https://github.com/hugsy/gef) and  [pwndbg](https://github.com/pwndbg/pwndbg).
+Both features actually inspired by projects like [GEF](https://github.com/hugsy/gef) and [pwndbg](https://github.com/pwndbg/pwndbg).
 
 # Install
 
