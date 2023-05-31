@@ -49,7 +49,7 @@ pub fn init_colors() {
 pub fn get_color(idx: usize) -> &'static str {
     unsafe {
         if idx >= COLORS_CUSTOM.len() {
-            COLORS_CUSTOM[(COLORS_CUSTOM.len() % idx)].as_str()
+            COLORS_CUSTOM[COLORS_CUSTOM.len() % idx].as_str()
         } else {
             COLORS_CUSTOM[idx].as_str()
         }
